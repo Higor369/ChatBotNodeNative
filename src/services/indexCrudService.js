@@ -1,67 +1,17 @@
-const express = require('express');
-const app = express();
-const assert = require('assert');
-const bodyParser = require('body-parser');
-const { relative } = require('path');
-const mongoDb = require('./infra/mongo');
 
-const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({extended: false});
+const assert = require('assert');
+
+const mongoDb = require('../../infra/mongo');
+
 let db;
-app.use(jsonParser);
-app.use(urlencodedParser);
 
 mongoDb.getConnection().then((dbResult) =>{
-	app.listen(3000);
+	
 	db = dbResult;
-	console.log('rodandooooo');
+	
 });
 
-app.post('/insert', urlencodedParser, function(req,res){
-	
-	var objJSON = constroiObjJsonInsert(req)
-	console.log(objJSON);
-	insertData(objJSON, function(result){
-		res.send(result);
-	})
-})
-
-app.post('/update', urlencodedParser, function(req,res){
-	
-	var objJSON = constroiObjJsonUpdate(req)
-	
-	updateData(objJSON, function(result){
-		res.send(result);
-	})
-})
-
-app.post('/delete', urlencodedParser, function(req,res){
-	
-	var objJSON = constroiObjJsonUpdate(req)
-	
-	deleteData(objJSON, function(result){
-		res.send(result);
-	})
-})
-
-app.post('/find', urlencodedParser, function(req,res){
-	
-	var objJSON = constroiObjJsonFind(req)
-	
-	selectData(objJSON, function(result){
-		res.send(result);
-	})
-})
-
-app.get('/question',urlencodedParser, function(req,res){
-	let objJSON = constroiObjJsonQuestion(req);
-	
-	questionData(objJSON,function(result){
-		res.send(result);
-	})
-})
-
-function questionData(objJSON,callback){
+exports.questionData= function(objJSON,callback){
 	const collection = db.collection('chatbot');
 	collection.find(objJSON).toArray(function(err,result){
 		assert.equal(null,err);
@@ -165,14 +115,14 @@ const naturalLanguage = function(question,array){
 
 }
 
-const insertData = function(objJSON, callback){
+exports.insertData = function(objJSON, callback){
 	const collection = db.collection('chatbot');
 	collection.insertOne(objJSON,function(erro,result){
 		assert.equal(null,erro);
 		callback(result);
 	})
 }
-const updateData = function(objJSON, callback){
+exports.updateData = function(objJSON, callback){
 	const collection = db.collection('chatbot');
 	const code_current = objJSON.code_current;
 	collection.updateOne({code_current: code_current},{$set: objJSON},function(erro,result){
@@ -180,14 +130,14 @@ const updateData = function(objJSON, callback){
 		callback(result);
 	})
 }
-const deleteData = function(objJSON, callback){
+exports.deleteData = function(objJSON, callback){
 	const collection = db.collection('chatbot');
 	collection.deleteOne(objJSON,function(erro,result){
 		assert.equal(null,erro);
 		callback(result);
 	})
 }
-const selectData = function(objJSON, callback){
+exports.selectData = function(objJSON, callback){
 	const collection = db.collection('chatbot');	
 	collection.find(objJSON).toArray(function(erro, result){
 		assert.equal(null,erro);
@@ -195,7 +145,7 @@ const selectData = function(objJSON, callback){
 	})
 }
 
-function cod(){
+const cod = function(){
 	const data = new Date();
 	const ano = data.getFullYear();
 	const mes = data.getMonth();
@@ -209,7 +159,7 @@ function cod(){
 	return result;
 }
 
-function constroiObjJsonQuestion(req){
+exports.constroiObjJsonQuestion = function(req){
 	let objJSON = {};
 
 	if(req.query.code_user){
@@ -240,7 +190,7 @@ function constroiObjJsonQuestion(req){
 	return objJSON
 }
 
-function constroiObjJsonInsert(req){
+exports.constroiObjJsonInsert = function(req){
 
 	let objJSON = {};
 
@@ -292,7 +242,7 @@ function constroiObjJsonInsert(req){
 
 }
 
-function constroiObjJsonUpdate(req){
+exports.constroiObjJsonUpdate= function(req){
 
 	let objJSON = {};
 
@@ -323,7 +273,7 @@ function constroiObjJsonUpdate(req){
 
 }
 
-function constroiObjJsonFind(req){
+exports.constroiObjJsonFind= function(req){
 
 	let objJSON = {};
 
