@@ -1,4 +1,3 @@
 module.exports = {
-    mongoDbUrl: 'mongodb://localhost:27017',
-    mongoDbName: 'local'
+    mongoDbUrl: 'mongodb://localhost:27017'
 }

@@ -1,19 +1,20 @@
 const express = require('express');
 const app = express();
-
 const bodyParser = require('body-parser');
-const mongoDb = require('../infra/mongo');
-
 const config = require('../config');
 const indexCrud = require('../src/controlers/indexCrudControler')
+const userRouter = require('../src/controlers/userControler')
 
-let db = null;
+// let db = null;
 
+// const mongoDb = require('../infra/mongo');
+// const mongoClient = new mongoDb('local');
 
-mongoDb.getConnection().then((dbResult) =>{
+// mongoClient.getConnection().then((dbResult) =>{
 	
-	console.log('rodandooooo');
-});
+// 	db = dbResult;
+	
+// });
 
 
 const jsonParser = bodyParser.json();
@@ -32,6 +33,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use('/', urlencodedParser, indexCrud);
+app.use('/chatbot', urlencodedParser, indexCrud);
+app.use('/user',urlencodedParser,userRouter);
 
 module.exports = app;   

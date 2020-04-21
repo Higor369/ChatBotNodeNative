@@ -1,19 +1,32 @@
 const MongoClient = require('mongodb').MongoClient;
 const config = require('../config');
-const assert = require('assert')
+const assert = require('assert');
+const { promises } = require('dns');
+const { rejects } = require('assert');
 const url = config.mongoDbUrl;
-const dbName = config.mongoDbName;
+
 
 class MongoDbConnection {
+
+    db;
+    
+    constructor(){ 
+
+    }
     getConnection() {
-        return new Promise((resolve, reject) => {
+        return new Promise(function(resolve,reject){
             MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, client) {
                 assert.equal(null, err);
-                console.log('banco de dados conectado com sucesso.');
-                resolve(client.db(dbName));
-            });
+
+                if(err){
+                    reject(err);
+                }
+                console.log('banco de dados conectado com sucesso. dbName = ');
+                resolve(client.db('local'))
+                
+        })
         });
     }
 }
 
-module.exports = new MongoDbConnection();
+module.exports = MongoDbConnection;
