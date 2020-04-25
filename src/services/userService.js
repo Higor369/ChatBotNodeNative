@@ -1,5 +1,4 @@
 const mongoDb = require('../../infra/mongo');
-const mongoClient = new mongoDb();
 const assert = require('assert');
 
 
@@ -32,7 +31,7 @@ class userService {
 
 
      insertUser = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         collection.insertOne(objJSON, function(err, result) {
             assert.equal(null, err);
             callback(result);
@@ -40,7 +39,7 @@ class userService {
     }
     
      updateUser = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         const code_user = objJSON.code_user;
         collection.updateOne({code_user: code_user}, {$set: objJSON}, function(err, result) {
             assert.equal(null, err);
@@ -49,7 +48,7 @@ class userService {
     }
     
      deleteUser = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         collection.deleteOne(objJSON, function(err, result) {
             assert.equal(null, err);
             callback(result);
@@ -57,7 +56,7 @@ class userService {
     }
     
      findUser = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         collection.find(objJSON).toArray(function(err, result) {
             assert.equal(null, err);
             callback(result);
@@ -65,7 +64,7 @@ class userService {
     }
 
      activateUserTrue = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         const code_user = objJSON.code_user;
         collection.updateMany({code_user: code_user}, {$set: {activate: true}}, function(err, result) {
             assert.equal(null, err);
@@ -74,7 +73,7 @@ class userService {
     }
 
      activateUserFalse = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         const code_user = objJSON.code_user;
         collection.updateMany({code_user: code_user}, {$set: {activate: false}}, function(err, result) {
             assert.equal(null, err);
@@ -83,11 +82,18 @@ class userService {
     }
     
      deleteUserAll = function(objJSON, callback) {
-        const collection = db.collection('user');
+        const collection = this.db.collection('user');
         collection.deleteMany(objJSON, function(err, result) {
             assert.equal(null, err);
             callback(result);
         });
+    }
+    findUserOne = function(objJSON, callback) {
+        const collection = this.db.collection('user');
+        collection.findOne(objJSON, function(err, result) {
+            assert.equal(null, err);
+            callback(result);
+        })
     }
 
 }
