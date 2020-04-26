@@ -63,19 +63,27 @@ class userService {
         });
     }
 
-     activateUserTrue = function(objJSON, callback) {
+    activateUserTrue = function(objJSON, callback) {
         const collection = this.db.collection('user');
-        const code_user = objJSON.code_user;
-        collection.updateMany({code_user: code_user}, {$set: {activate: true}}, function(err, result) {
+        const code_user = Number(objJSON.code_user);
+        collection.updateOne({code_user: code_user}, {$set: {activate: 1}});
+        const collection = this.db.collection('documents');
+        collection.updateMany({code_user: code_user}, {$set: {activate: 1}});
+        const collection = this.db.collection('chatbot');
+        collection.updateMany({code_user: code_user}, {$set: {activate: 1}}, function(err, result) {
             assert.equal(null, err);
             callback(result);
         });
     }
-
+    
      activateUserFalse = function(objJSON, callback) {
         const collection = this.db.collection('user');
-        const code_user = objJSON.code_user;
-        collection.updateMany({code_user: code_user}, {$set: {activate: false}}, function(err, result) {
+        const code_user = Number(objJSON.code_user);
+        collection.updateOne({code_user: code_user}, {$set: {activate: 0}});
+        const collection = this.db.collection('documents');
+        collection.updateMany({code_user: code_user}, {$set: {activate: 0}});
+        const collection = this.db.collection('chatbot');
+        collection.updateMany({code_user: code_user}, {$set: {activate: 0}}, function(err, result) {
             assert.equal(null, err);
             callback(result);
         });

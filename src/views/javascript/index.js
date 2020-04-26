@@ -78,7 +78,7 @@ const strJSON = localStorage.getItem('objJSON').toString().trim();
 	   				}
 	   				listarDocumentos();
 	   			}
-	   			http.send(`code_user=${code_user}&activate=true`);  			
+	   			http.send(`code_user=${code_user}&activate=1`);	   			
 	   		}
 
 	   		function selecionar(_code_current=-1) {
@@ -106,7 +106,7 @@ const strJSON = localStorage.getItem('objJSON').toString().trim();
 	   					}
 	   				}
 	   			}
-	   			http.send(`code_current=${_code_current}&activate=true`);
+	   			http.send(`code_user=${code_user}&activate=1`);	   
 	   		}
 
 	   		function novo() {
@@ -221,5 +221,5 @@ const strJSON = localStorage.getItem('objJSON').toString().trim();
 	   					}
 	   				}
 	   			}
-	   			http.send(`code_user=${code_user}&activate=true`);	   			
+	   			http.send(`code_user=${code_user}&activate=1`);	   	   			
 	   		}

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 	<head>
 	   <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
@@ -146,7 +146,7 @@
 	   				}
 	   				listarDocumentos();
 	   			}
-	   			http.send(`code_user=${code_user}&activate=true`);  			
+	   			http.send(`code_user=${code_user}&activate=1`);  			
 	   		}
 
 	   		function selecionar(_code_current=-1) {
@@ -174,7 +174,7 @@
 	   					}
 	   				}
 	   			}
-	   			http.send(`code_current=${_code_current}&activate=true`);
+	   			http.send(`code_current=${_code_current}&activate=1`);
 	   		}
 
 	   		function novo() {
@@ -289,7 +289,7 @@
 	   					}
 	   				}
 	   			}
-	   			http.send(`code_user=${code_user}&activate=true`);	   			
+	   			http.send(`code_user=${code_user}&activate=1`);	   			
 	   		}
 	   </script>
 	   <div id="dlDeletar" class="modal" role="dialog">

@@ -48,60 +48,152 @@ defaultName = function(question='') {
 	}
 	return nome.trim();
 }
-    getDocuments = function(question=""){
-        question = question.toString().trim().toLocaleLowerCase();
-        
-        let _nome = this.getName(question);
-        let _idade = this.getYears(question);
-        let _email = '';
-        let _celular = '';
-        let _telefone = '';
-        let _cep = '';
-        let _cpf = '';
-        let _cnpj = '';
+getDocuments = function(question='', code_user=-1) {
+	question = question.toString().trim();
+
+	let _nome = this.getName(question);
+	let _idade = this.getYears(question);
+	let _email = '';
+	let _celular = '';
+	let _telefone = '';
+	let _cep = '';
+	let _endereco = this.getEndereco(question);
+	let _bairro = this.getBairro(question);
+	let _numero = '';
+	let _cpf = '';
+	let _cnpj = '';
+
+	const questionTokens = question.split(' ');
+	for(let i=0; i<questionTokens.length; i++) {
+		let word = questionTokens[i].toString().trim();
+
+		if(word.length>=1) {
+			if(_email.length<=0) _email = this.email(word);
+			if(_celular.length<=0) _celular = this.celular(word);
+			if(_telefone.length<=0) _telefone = this.telefone(word);
+			if(_cep.length<=0) _cep = this.cep(word);
+			if(_numero.length<=0) _numero = this.numero(word, question);
+			if(_cpf.length<=0) _cpf = this.cpf(word);
+			if(_cnpj.length<=0) _cnpj = this.cnpj(word);
+		}
+	}
+
+	let objJSON = {};
+	if(code_user>0) objJSON.code_user = code_user; else objJSON.code_user = -1;
+	if(_nome.length>0) objJSON.nome = _nome; else objJSON.nome = '';
+	if(_idade.length>0) objJSON.idade = Number(_idade); else objJSON.idade = '';
+	if(_email.length>0) objJSON.email = _email; else objJSON.email = '';
+	if(_celular.length>0) objJSON.celular = Number(_celular); else objJSON.celular = '';
+	if(_telefone.length>0) objJSON.telefone = Number(_telefone); else objJSON.telefone = '';
+	if(_cep.length>0) objJSON.cep = Number(_cep); else objJSON.cep = '';
+	if(_endereco.length>0) objJSON.endereco = _endereco; else objJSON.endereco = '';
+	if(_bairro.length>0) objJSON.bairro = _bairro; else objJSON.bairro = '';
+	if(_numero.length>0) objJSON.numero = Number(_numero); else objJSON.numero = '';
+	if(_cpf.length>0) objJSON.cpf = Number(_cpf); else objJSON.cpf = '';
+	if(_cnpj.length>0) objJSON.cnpj = Number(_cnpj); else objJSON.cnpj = '';
+	objJSON.activate = 1;
+
+	if((_nome.length>0)||
+	   (_idade.length>0)||
+	   (_email.length>0)||
+	   (_celular.length>0)||
+	   (_telefone.length>0)||
+	   (_cep.length>0)||
+	   (_endereco.length>0)||
+	   (_bairro.length>0)||
+	   (_numero.length>0)||
+	   (_cpf.length>0)||
+	   (_cnpj.length>0)) {
+		const collection = db.collection('documents');
+		collection.insertOne(objJSON);
+		return true;
+	}else return false;
+}
+
+    getEndereco = function(question='') {
+        question = question.toString().trim();
+        let endereco = '';
+        let start = '';
+        if(question.indexOf('Endereço')>=0) start = 'Endereço';
+        if(question.indexOf('Rua')>=0) start = 'Rua';
+        if(question.indexOf('R.')>=0) start = 'R.';
+        if(question.indexOf('Avenida')>=0) start = 'Avenida';
+        if(question.indexOf('Av.')>=0) start = 'Av.';
+        if(question.indexOf('Travessa')>=0) start = 'Travessa';
     
-        const questionTokens = question.split(' ');
-        for(let i=0; i<questionTokens.length; i++) {
-            let word = questionTokens[i].toString().trim();
+        if(start.length>0) {
+            let indexStart = question.indexOf(start);
     
-            if(word.length>=1) {
-                if(_email.length<=0) _email = this.email(word);
-                if(_celular.length<=0) _celular = this.celular(word);
-                if(_telefone.length<=0) _telefone = this.telefone(word);
-                if(_cep.length<=0) _cep = this.cep(word);
-                if(_cpf.length<=0) _cpf = this.cpf(word);
-                if(_cnpj.length<=0) _cnpj = this.cnpj(word);
-            }
+            let index1 = question.indexOf(' e '); if((index1<0)||(index1<indexStart)) index1 = Infinity;
+            let index2 = question.indexOf(','); if((index2<0)||(index2<indexStart)) index2 = Infinity;
+            let index3 = question.indexOf(';'); if((index3<0)||(index3<indexStart)) index3 = Infinity;
+            let index4 = question.indexOf('.'); if((index4<0)||(index4<indexStart)) index4 = Infinity;
+            let index5 = question.indexOf('-'); if((index5<0)||(index5<indexStart)) index5 = Infinity;
+            let indexEnd = [
+                Math.abs(index1-indexStart),
+                Math.abs(index2-indexStart),
+                Math.abs(index3-indexStart),
+                Math.abs(index4-indexStart),
+                Math.abs(index5-indexStart)
+            ].sort((a, b) => a - b)[0]+indexStart;
+            if(indexEnd<indexStart) indexEnd = question.length;
+            endereco = question.substring(indexStart, indexEnd);
+            endereco = endereco.replace(/ é /g, '').trim();
+    
+            let carac = '';
+            index1 = endereco.indexOf(' e '); if(index1>=0) carac = ' e ';
+            index2 = endereco.indexOf(','); if(index2>=0) carac = ',';
+            index3 = endereco.indexOf(';'); if(index3>=0) carac = ';';
+            index4 = endereco.indexOf('.'); if(index4>=0) carac = '.';
+            index5 = endereco.indexOf('-'); if(index5>=0) carac = '-';
+            let arrEndereco = endereco.split(carac);
+            endereco = arrEndereco[0].toString().trim();
         }
+        return endereco;
+    }
     
-        let objJSON = {};
-        if(_nome.length>0) objJSON.nome = _nome; else objJSON.nome = '';
-        if(_idade.length>0) objJSON.idade = Number(_idade); else objJSON.idade = '';
-        if(_email.length>0) objJSON.email = _email; else objJSON.email = '';
-        if(_celular.length>0) objJSON.celular = Number(_celular); else objJSON.celular = '';
-        if(_telefone.length>0) objJSON.telefone = Number(_telefone); else objJSON.telefone = '';
-        if(_cep.length>0) objJSON.cep = Number(_cep); else objJSON.cep = '';
-        if(_cpf.length>0) objJSON.cpf = Number(_cpf); else objJSON.cpf = '';
-        if(_cnpj.length>0) objJSON.cnpj = Number(_cnpj); else objJSON.cnpj = '';
+     getBairro = function(question='') {
+        question = question.toString().trim();
+        let bairro = '';
+        let start = '';
+        if(question.indexOf('Bairro')>=0) start = 'Bairro';
     
-        if((_nome.length>0)||
-           (_idade.length>0)||
-           (_email.length>0)||
-           (_celular.length>0)||
-           (_telefone.length>0)||
-           (_cep.length>0)||
-           (_cpf.length>0)||
-           (_cnpj.length>0)) {
-            const collection = this.db.collection('documents');
-            collection.insertOne(objJSON);
-            return true;
-        }else return false;
+        if(start.length>0) {
+            let indexStart = question.indexOf(start)+start.length+1;
+    
+            let index1 = question.indexOf(' e '); if((index1<0)||(index1<indexStart)) index1 = Infinity;
+            let index2 = question.indexOf(','); if((index2<0)||(index2<indexStart)) index2 = Infinity;
+            let index3 = question.indexOf(';'); if((index3<0)||(index3<indexStart)) index3 = Infinity;
+            let index4 = question.indexOf('.'); if((index4<0)||(index4<indexStart)) index4 = Infinity;
+            let index5 = question.indexOf('-'); if((index5<0)||(index5<indexStart)) index5 = Infinity;
+            let indexEnd = [
+                Math.abs(index1-indexStart),
+                Math.abs(index2-indexStart),
+                Math.abs(index3-indexStart),
+                Math.abs(index4-indexStart),
+                Math.abs(index5-indexStart)
+            ].sort((a, b) => a - b)[0]+indexStart;
+            if(indexEnd<indexStart) indexEnd = question.length;
+            bairro = question.substring(indexStart, indexEnd);
+            bairro = bairro.replace(/:/g, '')
+            bairro = bairro.replace(/ é /g, '').trim();
+    
+            let carac = '';
+            index1 = bairro.indexOf(' e '); if(index1>=0) carac = ' e ';
+            index2 = bairro.indexOf(','); if(index2>=0) carac = ',';
+            index3 = bairro.indexOf(';'); if(index3>=0) carac = ';';
+            index4 = bairro.indexOf('.'); if(index4>=0) carac = '.';
+            index5 = bairro.indexOf('-'); if(index5>=0) carac = '-';
+            let arrBairro = bairro.split(carac);
+            bairro = arrBairro[0].toString().trim();
+        }
+        return bairro;
     }
 
     getName = function (question='') {
         question = question.toString().trim();
 	let nome = '';
-	let Default = defaultName(question);
+	let Default = this.defaultName(question);
 	if(Default.length<=0) {
 		let start = '';
 		if(question.indexOf('Nome')>=0) start = 'Nome';
@@ -142,11 +234,23 @@ defaultName = function(question='') {
         }
         return idade;
     }
+    numero = function(_numero='', question='') {
+        let Numero = '';
+        let idade = this.getYears(question);
+        Numero = _numero.toString().trim();
+        Numero = Numero.replace(/[^0-9]/g, '');
+        if((Numero.length>=1)&&(Numero.length<=4)&&(Numero!=idade)) return Numero;
+        else return '';
+    }
     
-     email = function(_email='') {
+    email = function(_email='') {
         _email = _email.toString().trim();
         _email = _email.replace(/[^0-9a-zA-Z@.-_]/g, '');
-        if((_email.indexOf('@')>0)&&(_email.indexOf('.')>0)&&(_email.length>=5)) return _email;
+        if((_email.indexOf('@')>0)&&(_email.indexOf('.')>0)&&(_email.length>=5)) {
+            let c = _email.charAt(_email.length-1);
+            if(c=='.') _email = _email.substring(0, _email.length-1);
+            return _email;
+        }
         else return '';
     }
     

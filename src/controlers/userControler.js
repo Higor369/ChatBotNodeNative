@@ -7,7 +7,7 @@ const userService = new UserService();
 router.post('/insert', function(req,res){
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); else objJSON.code_user = cod();
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate); else objJSON.activate = true;
+	if(req.body.activate) objJSON.activate = Number(req.body.activate); else objJSON.activate = 1;
 	if(req.body.full_name) objJSON.full_name = req.body.full_name; else objJSON.full_name = '';
 	if(req.body.user_name) objJSON.user_name = req.body.user_name; else objJSON.user_name = '';
 	if(req.body.email) objJSON.email = req.body.email; else objJSON.email = '';
@@ -22,7 +22,7 @@ router.post('/insert', function(req,res){
 router.post('/update', function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;
@@ -47,7 +47,7 @@ router.post('/user/search', function(req, res) {
 router.post('/delete', function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;
@@ -61,7 +61,7 @@ router.post('/delete', function(req, res) {
 router.post('/find', function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;

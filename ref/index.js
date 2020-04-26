@@ -28,6 +28,33 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
 app.listen(3000);
 console.log('servidor rodando em: localhost:3000');
 //INTERFACE #########################################################################
+// Admin
+app.get('/admin', urlencodedParser, function(req, res) {
+	res.set('Content-Type', 'text/html');
+	const fs = require('fs');
+	const data = fs.readFileSync('./admin.html', 'utf8');
+	res.send(data);
+});
+app.post('/admin/search', urlencodedParser, function(req, res) {
+	let objJSON = {};
+	if(req.body.user_name) objJSON.user_name = req.body.user_name; 
+	else objJSON.user_name = false;
+	if(req.body.password) objJSON.password = req.body.password; 
+	else objJSON.password = false;
+
+	findAdmin(objJSON, function(result) {
+		if(result) res.send(result);
+		else res.send({user_name: false, password: false});
+	});
+});
+const findAdmin = function(objJSON, callback) {
+	const collection = db.collection('admin');
+	collection.findOne(objJSON, function(err, result) {
+		assert.equal(null, err);
+		callback(result);
+	})
+}
+// -----
 app.get('/login', urlencodedParser, function(req, res) {
 	res.set('Content-Type', 'text/html');
 	const fs = require('fs');
@@ -42,7 +69,7 @@ app.get('/index', urlencodedParser, function(req, res) {
 	else objJSON.password = false;
 
 	findUserOne(objJSON, function(result) {
-		if((result)&&(result.activate==true)) {
+		if((result)&&(result.activate==1)) {
 			res.set('Content-Type', 'text/html');
 			const fs = require('fs');
 			const data = fs.readFileSync('./index.html', 'utf8');
@@ -77,8 +104,8 @@ app.post('/documents/find', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); 
 	else objJSON.code_user = -1;
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate); 
-	else objJSON.activate = true;
+	if(req.body.activate) objJSON.activate = Number(req.body.activate); 
+	else objJSON.activate = 1;
 
 	findDocuments(objJSON, function(result) {
 		res.send(result);
@@ -96,7 +123,8 @@ const findDocuments = function(objJSON, callback) {
 app.post('/user/insert', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); else objJSON.code_user = cod();
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate); else objJSON.activate = true;
+	if(objJSON.code_user<=0) objJSON.code_user = cod();
+	if(req.body.activate) objJSON.activate = Number(req.body.activate); else objJSON.activate = 1;
 	if(req.body.full_name) objJSON.full_name = req.body.full_name; else objJSON.full_name = '';
 	if(req.body.user_name) objJSON.user_name = req.body.user_name; else objJSON.user_name = '';
 	if(req.body.email) objJSON.email = req.body.email; else objJSON.email = '';
@@ -110,7 +138,7 @@ app.post('/user/insert', urlencodedParser, function(req, res) {
 app.post('/user/update', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;
@@ -124,7 +152,7 @@ app.post('/user/update', urlencodedParser, function(req, res) {
 app.post('/user/delete', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;
@@ -138,7 +166,7 @@ app.post('/user/delete', urlencodedParser, function(req, res) {
 app.post('/user/find', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;
@@ -179,7 +207,7 @@ app.post('/user/delete/all', urlencodedParser, function(req, res) {
 app.post('/chatbot/insert', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); else objJSON.code_user = 0;
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate); else objJSON.activate = true;
+	if(req.body.activate) objJSON.activate = Number(req.body.activate); else objJSON.activate = 1;
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current); else objJSON.code_current = cod();
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation); else objJSON.code_relation = 0;
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before); else objJSON.code_before = 0;
@@ -207,7 +235,7 @@ function cod() {
 app.post('/chatbot/update', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current);
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation);
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
@@ -222,7 +250,7 @@ app.post('/chatbot/update', urlencodedParser, function(req, res) {
 app.post('/chatbot/delete', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current);
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation);
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
@@ -237,7 +265,7 @@ app.post('/chatbot/delete', urlencodedParser, function(req, res) {
 app.post('/chatbot/find', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current);
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation);
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
@@ -285,11 +313,11 @@ const findUser = function(objJSON, callback) {
 const activateUserTrue = function(objJSON, callback) {
 	const collection = db.collection('user');
 	const code_user = Number(objJSON.code_user);
-	collection.updateOne({code_user: code_user}, {$set: {activate: true}});
+	collection.updateOne({code_user: code_user}, {$set: {activate: 1}});
 	const collection = db.collection('documents');
-	collection.updateMany({code_user: code_user}, {$set: {activate: true}});
+	collection.updateMany({code_user: code_user}, {$set: {activate: 1}});
 	const collection = db.collection('chatbot');
-	collection.updateMany({code_user: code_user}, {$set: {activate: true}}, function(err, result) {
+	collection.updateMany({code_user: code_user}, {$set: {activate: 1}}, function(err, result) {
 		assert.equal(null, err);
 		callback(result);
 	});
@@ -298,11 +326,11 @@ const activateUserTrue = function(objJSON, callback) {
 const activateUserFalse = function(objJSON, callback) {
 	const collection = db.collection('user');
 	const code_user = Number(objJSON.code_user);
-	collection.updateOne({code_user: code_user}, {$set: {activate: false}});
+	collection.updateOne({code_user: code_user}, {$set: {activate: 0}});
 	const collection = db.collection('documents');
-	collection.updateMany({code_user: code_user}, {$set: {activate: false}});
+	collection.updateMany({code_user: code_user}, {$set: {activate: 0}});
 	const collection = db.collection('chatbot');
-	collection.updateMany({code_user: code_user}, {$set: {activate: false}}, function(err, result) {
+	collection.updateMany({code_user: code_user}, {$set: {activate: 0}}, function(err, result) {
 		assert.equal(null, err);
 		callback(result);
 	});
@@ -352,7 +380,7 @@ const findData = function(objJSON, callback) {
 app.get('/chatbot/question', urlencodedParser, function(req, res) {
 	let objJSON = {};
 	if(req.query.code_user) objJSON.code_user = Number(req.query.code_user); else objJSON.code_user = 0;
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate); else objJSON.activate = true;
+	if(req.body.activate) objJSON.activate = Number(req.body.activate); else objJSON.activate = 1;
 	if(req.query.code_before) objJSON.code_before = Number(req.query.code_before); else objJSON.code_before = 0;
 	if(req.query.input) objJSON.input = req.query.input; else objJSON.input = '';
 
@@ -404,7 +432,7 @@ const nlp = function(question='', array=[], code_user=-1) {
 		return [{
 					"_id": "0",
 					"code_user": code_user,
-					"activate": true,
+					"activate": 1,
 					"code_current": -1,
 					"code_relation": -1,
 					"code_before": -1,
@@ -507,7 +535,7 @@ const getDocuments = function(question='', code_user=-1) {
 	if(_numero.length>0) objJSON.numero = Number(_numero); else objJSON.numero = '';
 	if(_cpf.length>0) objJSON.cpf = Number(_cpf); else objJSON.cpf = '';
 	if(_cnpj.length>0) objJSON.cnpj = Number(_cnpj); else objJSON.cnpj = '';
-	objJSON.activate = true;
+	objJSON.activate = 1;
 
 	if((_nome.length>0)||
 	   (_idade.length>0)||

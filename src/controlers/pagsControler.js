@@ -15,6 +15,12 @@ router.get('/login' ,function(req,res){
     res.send(data);
 
 })
+router.get('/admin', function(req, res) {
+	res.set('Content-Type', 'text/html');
+	const fs = require('fs');
+	const data = fs.readFileSync('./src/views/html/admin.html', 'utf8');
+	res.send(data);
+});
 
 router.get('/index' ,function(req,res){
     let objJSON = {};
@@ -24,7 +30,7 @@ router.get('/index' ,function(req,res){
 	else objJSON.password = false;
 
 	userService.findUserOne(objJSON, function(result) {
-		if((result)&&(result.activate==true)) {
+		if((result)&&(result.activate==1)) {
 			res.set('Content-Type', 'text/html');
 			const fs = require('fs');
 			const data = fs.readFileSync('./src/views/html/index.html', 'utf8');

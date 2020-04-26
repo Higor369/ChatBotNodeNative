@@ -8,7 +8,7 @@ router.post('/insert', function(req,res){
 	
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); else objJSON.code_user = 0;
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate); else objJSON.activate = true;
+	if(req.body.activate) objJSON.activate = Number(req.body.activate); else objJSON.activate = 1;
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current); else objJSON.code_current = cod();
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation); else objJSON.code_relation = 0;
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before); else objJSON.code_before = 0;
@@ -25,7 +25,7 @@ router.post('/update', function(req,res){
 	
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current);
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation);
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
@@ -41,7 +41,7 @@ router.post('/delete', function(req,res){
 	
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current);
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation);
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
@@ -57,7 +57,7 @@ router.post('/find', function(req,res){
 	
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Boolean(req.body.activate);
+	if(req.body.activate) objJSON.activate = Number(req.body.activate);
 	if(req.body.code_current) objJSON.code_current = Number(req.body.code_current);
 	if(req.body.code_relation) objJSON.code_relation = Number(req.body.code_relation);
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
