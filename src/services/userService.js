@@ -64,29 +64,29 @@ class userService {
     }
 
     activateUserTrue = function(objJSON, callback) {
-        const collection = this.db.collection('user');
-        const code_user = Number(objJSON.code_user);
-        collection.updateOne({code_user: code_user}, {$set: {activate: 1}});
-        const collection = this.db.collection('documents');
-        collection.updateMany({code_user: code_user}, {$set: {activate: 1}});
-        const collection = this.db.collection('chatbot');
-        collection.updateMany({code_user: code_user}, {$set: {activate: 1}}, function(err, result) {
-            assert.equal(null, err);
+        const collection_user = db.collection('user');
+		const code_user = Number(objJSON.code_user);
+		collection_user.updateOne({code_user: code_user}, {$set: {activate: 1}});
+		const collection_documents = db.collection('documents');
+		collection_documents.updateMany({code_user: code_user}, {$set: {activate: 1}});
+		const collection_chatbot = db.collection('chatbot');
+		collection_chatbot.updateMany({code_user: code_user}, {$set: {activate: 1}}, function(err, result) {
+			assert.equal(null, err);
             callback(result);
         });
     }
     
      activateUserFalse = function(objJSON, callback) {
-        const collection = this.db.collection('user');
-        const code_user = Number(objJSON.code_user);
-        collection.updateOne({code_user: code_user}, {$set: {activate: 0}});
-        const collection = this.db.collection('documents');
-        collection.updateMany({code_user: code_user}, {$set: {activate: 0}});
-        const collection = this.db.collection('chatbot');
-        collection.updateMany({code_user: code_user}, {$set: {activate: 0}}, function(err, result) {
-            assert.equal(null, err);
-            callback(result);
-        });
+        const collection_user = db.collection('user');
+		const code_user = Number(objJSON.code_user);
+		collection_user.updateOne({code_user: code_user}, {$set: {activate: 0}});
+		const collection_documents = db.collection('documents');
+		collection_documents.updateMany({code_user: code_user}, {$set: {activate: 0}});
+		const collection_chatbot = db.collection('chatbot');
+		collection_chatbot.updateMany({code_user: code_user}, {$set: {activate: 0}}, function(err, result) {
+			assert.equal(null, err);
+			callback(result);
+		});
     }
     
      deleteUserAll = function(objJSON, callback) {

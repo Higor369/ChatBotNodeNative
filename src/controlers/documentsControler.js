@@ -4,7 +4,7 @@ const DocumentsService = require('../services/documentsService');
 
 const documentsService = new DocumentsService();
 
-router.post('/documents/find', urlencodedParser, function(req, res) {
+router.post('/documents/find', function(req, res) {
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); 
 	else objJSON.code_user = -1;

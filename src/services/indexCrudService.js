@@ -37,11 +37,13 @@ questionData = function(objJSON, callback) {
 			collection.find(objFind).toArray(function(err, result) {
 				assert.equal(null, err);
 				if(result.length<=0) {
+					const questionUser = this.abreviacoes(objJSON.input);
 					collection.find({code_user: Number(objJSON.code_user)}).toArray(function(err, result) {
 						result = this.naturalLanguage(objJSON.input, result, Number(objJSON.code_user));
 						callback(result);
 					});
 				}else {
+					const questionUser = this.abreviacoes(objJSON.input);
 					result = nlp(objJSON.input, result, Number(objJSON.code_user));
 					callback(result);					
 				}
@@ -49,6 +51,21 @@ questionData = function(objJSON, callback) {
 		}else callback(result);
 	});
 }
+
+
+abreviacoes = function(Input='') {
+	
+		Input = Input.toString().trim();
+		let result = Input.replace(/ vc /g, 'você');
+		result = result.replace(/ tb /g, 'também');
+		result = result.replace(/ oq /g, 'o que');
+		result = result.replace(/ dq /g, 'de que');
+		result = result.replace(/ td /g, 'tudo');
+		result = result.replace(/ pq /g, 'por quê');
+		result.toString().trim();
+		return result;
+	
+	}
 
  naturalLanguage = function(question='', array=[], code_user=-1) {
 	let originalQuestion = question.toString().trim();
@@ -167,6 +184,18 @@ selectData = function(objJSON, callback){
 	console.log(result);
 	return result;
 }
+
+findData = function(objJSON, callback) {
+	
+		const collection = this.b.collection('chatbot');
+		collection.find(objJSON).toArray(function(err, result) {
+			assert.equal(null, err);
+			callback(result);
+		})
+}
+
+
+
 
 }
 module.exports = indexCrud

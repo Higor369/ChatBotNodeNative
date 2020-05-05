@@ -7,6 +7,7 @@ const userService = new UserService();
 router.post('/insert', function(req,res){
 	let objJSON = {};
 	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user); else objJSON.code_user = cod();
+	if(objJSON.code_user<=0) objJSON.code_user = cod();
 	if(req.body.activate) objJSON.activate = Number(req.body.activate); else objJSON.activate = 1;
 	if(req.body.full_name) objJSON.full_name = req.body.full_name; else objJSON.full_name = '';
 	if(req.body.user_name) objJSON.user_name = req.body.user_name; else objJSON.user_name = '';
@@ -21,12 +22,13 @@ router.post('/insert', function(req,res){
 
 router.post('/update', function(req, res) {
 	let objJSON = {};
-	if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
-	if(req.body.activate) objJSON.activate = Number(req.body.activate);
-	if(req.body.full_name) objJSON.full_name = req.body.full_name;
-	if(req.body.user_name) objJSON.user_name = req.body.user_name;
-	if(req.body.email) objJSON.email = req.body.email;
-	if(req.body.password) objJSON.password = req.body.password;
+		if(req.body.code_user) objJSON.code_user = Number(req.body.code_user);
+		if(req.body.activate) objJSON.activate = Number(req.body.activate);
+		if(req.body.full_name) objJSON.full_name = req.body.full_name;
+		if(req.body.user_name) objJSON.user_name = req.body.user_name;
+		if(req.body.email) objJSON.email = req.body.email;
+		if(req.body.password) objJSON.password = req.body.password;
+
 
 	userService.updateUser(objJSON, function(result) {
 		res.send(result);
@@ -51,7 +53,7 @@ router.post('/delete', function(req, res) {
 	if(req.body.full_name) objJSON.full_name = req.body.full_name;
 	if(req.body.user_name) objJSON.user_name = req.body.user_name;
 	if(req.body.email) objJSON.email = req.body.email;
-	if(req.body.password) objJSON.password = req.body.password
+	if(req.body.password) objJSON.password = req.body.password;
 
 	userService.deleteUser(objJSON, function(result) {
 		res.send(result);

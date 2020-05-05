@@ -31,7 +31,7 @@ router.post('/update', function(req,res){
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
 	if(req.body.input) objJSON.input = req.body.input;
 	if(req.body.output) objJSON.output = req.body.output;
-	
+
 	crudService.updateData(objJSON, function(result){
 		res.send(result);
 	})
@@ -47,7 +47,7 @@ router.post('/delete', function(req,res){
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
 	if(req.body.input) objJSON.input = req.body.input;
 	if(req.body.output) objJSON.output = req.body.output;
-	
+
 	crudService.deleteData(objJSON, function(result){
 		res.send(result);
 	})
@@ -63,7 +63,7 @@ router.post('/find', function(req,res){
 	if(req.body.code_before) objJSON.code_before = Number(req.body.code_before);
 	if(req.body.input) objJSON.input = req.body.input;
 	if(req.body.output) objJSON.output = req.body.output;
-	
+
 	crudService.selectData(objJSON, function(result){
 		res.send(result);
 	})

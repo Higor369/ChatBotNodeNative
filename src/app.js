@@ -8,6 +8,7 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 app.use(jsonParser);
 app.use(urlencodedParser);
 app.use('/css', express.static('c:/Users/higor/Desktop/chatBot/node_modules/bootstrap/dist/css'));
+app.use('/css', express.static('c:/Users/higor/Desktop/chatBot/src/views/css'))
 app.use('/js', express.static('c:/Users/higor/Desktop/chatBot/node_modules/jquery/dist/'));
 app.use('/js', express.static('c:/Users/higor/Desktop/chatBot/node_modules/popper.js/dist'));
 app.use('/js', express.static('c:/Users/higor/Desktop/chatBot/node_modules/bootstrap/dist/js'));

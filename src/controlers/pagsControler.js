@@ -5,13 +5,26 @@ const UserService = require('../services/userService');
 
 const userService = new UserService();
 
-router.get('/login' ,function(req,res){
 
+router.get('/', function(req, res) {	
+		res.set('Content-Type', 'text/html');
+		const fs = require('fs');
+		const data = fs.readFileSync('./src/views/html/home.html', 'utf8');
+		res.send(data);
+});
+router.get('/home', function(req, res) {	
+		res.set('Content-Type', 'text/html');
+		const fs = require('fs');
+		const data = fs.readFileSync('./src/views/html/home.html', 'utf8');
+		res.send(data);
+	
+});
+router.get('/login' ,function(req,res){
     res.set('Content-Type' , 'text/html');
     const fs = require('fs');
-    var aaa = "./src/views/html/login.html";
-    console.log(aaa)
-    const data = fs.readFileSync(aaa,'utf8');
+    var path = "./src/views/html/login.html";
+    console.log(path)
+    const data = fs.readFileSync(path,'utf8');
     res.send(data);
 
 })
@@ -31,10 +44,15 @@ router.get('/index' ,function(req,res){
 
 	userService.findUserOne(objJSON, function(result) {
 		if((result)&&(result.activate==1)) {
+			let code_user = Number(result.code_user);
 			res.set('Content-Type', 'text/html');
 			const fs = require('fs');
 			const data = fs.readFileSync('./src/views/html/index.html', 'utf8');
-			res.send(data);	
+			data = data.replace('[code_user]', code_user);
+				data = data.replace('[code_user]', code_user);
+				data = data.replace('[code_user]', code_user);
+				res.send(data);	
+			
 		}else {
 			res.set('Content-Type', 'text/html');
 			const fs = require('fs');
@@ -44,5 +62,17 @@ router.get('/index' ,function(req,res){
 	});
 });
 
+
+router.get('/chatbot', function(req, res) {
+
+		let code_user = -1;
+		if(req.query.code_user) code_user = Number(req.query.code_user);
+
+		res.set('Content-Type', 'text/html');
+		const fs = require('fs');
+		let data = fs.readFileSync('./src/views/html/chatbot.html', 'utf8');
+		data = data.replace('[code_user]', code_user);
+		res.send(data);
+});
 
 module.exports = router

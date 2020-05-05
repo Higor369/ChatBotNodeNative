@@ -42,7 +42,28 @@ defaultName = function(question='') {
 				nome = question.substring(indexStart, indexEnd);
 				nome = nome.replace(/ é /g, '');
 				nome = nome.replace(/:/g, '');
-				nome = nome.replace(/[0-9]/g, '').trim();			
+                nome = nome.replace(/[0-9]/g, '').trim();			
+                
+                if(nome.indexOf(' e ')>0) {
+                    nome = nome.split(' e ');
+                    nome = nome[0].toString().trim();
+                }
+                if(nome.indexOf(' é ')>0) {
+                    nome = nome.split(' é ');
+                    nome = nome[0].toString().trim();
+                }
+                if(nome.indexOf(',')>0) {
+                    nome = nome.split(',');
+                    nome = nome[0].toString().trim();
+                }
+                if(nome.indexOf(';')>0) {
+                    nome = nome.split(';');
+                    nome = nome[0].toString().trim();
+                }
+                if(nome.indexOf('.')>0) {
+                    nome = nome.split('.');
+                    nome = nome[0].toString().trim();
+                }			
 			}
 		}
 	}
@@ -217,7 +238,24 @@ getDocuments = function(question='', code_user=-1) {
 			nome = question.substring(indexStart, indexEnd);
 			nome = nome.replace(/ é /g, '');
 			nome = nome.replace(/:/g, '');
-			nome = nome.replace(/[0-9]/g, '').trim();
+            nome = nome.replace(/[0-9]/g, '').trim();
+            
+            if(nome.indexOf(' e ')>0) {
+                nome = nome.split(' e ');
+                nome = nome[0].toString().trim();
+            }
+            if(nome.indexOf(',')>0) {
+                nome = nome.split(',');
+                nome = nome[0].toString().trim();
+            }
+            if(nome.indexOf(';')>0) {
+                nome = nome.split(';');
+                nome = nome[0].toString().trim();
+            }
+            if(nome.indexOf('.')>0) {
+                nome = nome.split('.');
+                nome = nome[0].toString().trim();
+            }
 		}
 	}else nome = Default;
 	return nome;
